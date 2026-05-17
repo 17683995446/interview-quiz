@@ -29,19 +29,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { CATEGORIES } from '@/config/categories'
 import { QuestionEngine } from '@/data/question-bank'
 import { useQuizStore } from '@/stores/quiz-session'
+import type { Question, CategoryId } from '@/types'
 import QuestionListItem from '@/components/question/QuestionListItem.vue'
 import QuestionDetailModal from '@/components/question/QuestionDetailModal.vue'
 
 const store = useQuizStore()
-const activeFilter = ref('all')
-const detailQ = ref(null)
+const activeFilter = ref<CategoryId | 'all'>('all')
+const detailQ = ref<Question | null>(null)
 
-const filterOptions = [{ id: 'all', name: '全部', icon: '📋' }, ...CATEGORIES]
+const filterOptions: Array<{ id: CategoryId | 'all'; name: string; icon: string }> = [{ id: 'all', name: '全部', icon: '📋' }, ...CATEGORIES]
 
 const filteredQuestions = computed(() =>
   activeFilter.value === 'all'

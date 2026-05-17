@@ -13,7 +13,9 @@
     "lint": "eslint . --ext .vue,.js,.ts --fix",
     "format": "prettier --write .",
     "type-check": "vue-tsc --noEmit",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "clean": "rm -rf dist coverage node_modules/.vite",
+    "analyze": "vite build --mode analyze"
   },
   "dependencies": {
     "echarts": "^6.0.0",
@@ -44,14 +46,5 @@
     "vite-plugin-pwa": "^1.0.0",
     "vitest": "^4.1.6",
     "vue-tsc": "^2.2.10"
-  },
-  "lint-staged": {
-    "*.{js,ts,vue}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{css,scss,json,md}": [
-      "prettier --write"
-    ]
   }
 }

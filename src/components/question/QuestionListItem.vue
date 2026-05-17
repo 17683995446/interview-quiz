@@ -12,12 +12,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { CATEGORIES } from '@/config/categories'
 import { useQuizStore } from '@/stores/quiz-session'
+import type { Question } from '@/types'
 
-const props = defineProps({ question: { type: Object, required: true } })
+const props = defineProps<{ question: Question }>()
 defineEmits(['click'])
 
 const store = useQuizStore()

@@ -18,13 +18,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useQuizStore } from '@/stores/quiz-session'
+import type { Question } from '@/types'
 import QuestionListItem from '@/components/question/QuestionListItem.vue'
 import QuestionDetailModal from '@/components/question/QuestionDetailModal.vue'
 
 const store = useQuizStore()
-const detailQ = ref(null)
+const detailQ = ref<Question | null>(null)
 const bookmarked = computed(() => store.bookmarkedQuestions)
 </script>

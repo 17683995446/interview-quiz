@@ -41,6 +41,7 @@
           v-for="item in navItems"
           :key="item.route"
           :to="item.route"
+          :aria-label="item.label"
           class="flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-2
                  px-2 py-2 md:px-5 md:py-3 text-slate-500 hover:text-primary-400 transition-colors
                  text-[0.68rem] md:text-sm font-medium"
@@ -54,7 +55,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useQuizStore } from '@/stores/quiz-session'
 import { useTheme } from '@/composables/use-theme'

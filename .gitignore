@@ -22,3 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Test coverage
+coverage/
+
+# Build artifacts
+dist/
+
+# Environment
+.env.local
+.env.*.local

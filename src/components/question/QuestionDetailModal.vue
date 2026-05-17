@@ -1,7 +1,7 @@
 <template>
   <div class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm flex items-end md:items-center justify-center" @click.self="$emit('close')">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl max-h-[85vh] overflow-y-auto
-                rounded-t-2xl md:rounded-2xl p-5 md:p-6 animate-slide-up">
+                rounded-t-2xl md:rounded-2xl p-5 md:p-6 animate-slide-up" role="dialog" aria-modal="true" aria-label="题目详情">
       <!-- Close -->
       <button
         class="sticky top-0 float-right w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center
@@ -64,13 +64,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { CATEGORIES, DIFFICULTY_MAP } from '@/config/categories'
 import { useQuizStore } from '@/stores/quiz-session'
 import { useToast } from '@/composables/use-toast-notification'
+import type { Question } from '@/types'
 
-const props = defineProps({ question: { type: Object, required: true } })
+const props = defineProps<{ question: Question }>()
 defineEmits(['close'])
 
 const store = useQuizStore()

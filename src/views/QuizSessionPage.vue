@@ -79,7 +79,7 @@
         <div class="flex items-center gap-3 text-xs text-slate-400">
           <span v-if="config.timer" class="font-mono text-amber-400">{{ timer.formatted.value }}</span>
           <span>{{ currentIndex + 1 }}/{{ questions.length }}</span>
-          <span>正确: <b class="text-emerald-400">{{ store.session.score }}</b></span>
+          <span>正确: <b class="text-emerald-400">{{ store.session?.score }}</b></span>
         </div>
       </div>
       <!-- Progress Bar -->
@@ -191,7 +191,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuizStore } from '@/stores/quiz-session'
@@ -200,6 +200,12 @@ import { QuestionEngine } from '@/data/question-bank'
 import { useTimer } from '@/composables/use-quiz-timer'
 import { useToast } from '@/composables/use-toast-notification'
 import { useQuizShortcuts } from '@/composables/use-keyboard-shortcuts'
+import type { Question, CategoryId, Difficulty, QuizConfig } from '@/types'
+
+interface LocalQuizConfig extends Omit<QuizConfig, 'category' | 'difficulty'> {
+  category: CategoryId | 'all' | 'wrong'
+  difficulty: Difficulty | 'all'
+}
 import AppCard from '@/components/common/AppCard.vue'
 import QuestionDetailModal from '@/components/question/QuestionDetailModal.vue'
 
@@ -213,12 +219,12 @@ const labels = ['A', 'B', 'C', 'D', 'E', 'F']
 
 // Phase management
 const phase = ref('setup')
-const config = ref({ category: 'all', count: 10, difficulty: 'all', timer: false })
-const selectedIdx = ref(null)
-const detailQ = ref(null)
+const config = ref<LocalQuizConfig>({ category: 'all', count: 10, difficulty: 'all', timer: false })
+const selectedIdx = ref<number | null>(null)
+const detailQ = ref<Question | null>(null)
 
-const categoryOptions = [{ id: 'all', name: '全部分类', icon: '📋' }, ...CATEGORIES]
-const difficultyOptions = [
+const categoryOptions: Array<{ id: CategoryId | 'all' | 'wrong'; name: string; icon: string }> = [{ id: 'all', name: '全部分类', icon: '📋' }, ...CATEGORIES]
+const difficultyOptions: Array<{ id: Difficulty | 'all'; label: string }> = [
   { id: 'all', label: '全部' },
   { id: 'easy', label: '简单' },
   { id: 'medium', label: '中等' },
@@ -257,6 +263,7 @@ const resultLabel = computed(() =>
 )
 
 function startQuiz() {
+  sessionStorage.setItem('__quiz_active__', 'true')
   let pool
   if (config.value.category === 'wrong') {
     pool = QuestionEngine.getWrongQuestions(store.records)
@@ -267,13 +274,18 @@ function startQuiz() {
     })
   }
   if (pool.length === 0) { toast.info('没有符合条件的题目'); return }
-  store.startSession(pool, { ...config.value, mode: config.value.category === 'wrong' ? 'wrong' : 'normal' })
+  const sessionConfig: QuizConfig = {
+    ...config.value,
+    category: config.value.category === 'wrong' ? 'all' : config.value.category,
+    mode: config.value.category === 'wrong' ? 'wrong' : 'normal',
+  }
+  store.startSession(pool, sessionConfig)
   selectedIdx.value = null
   phase.value = 'quiz'
   if (config.value.timer) { timer.reset(0); timer.start() }
 }
 
-function selectAnswer(idx) {
+function selectAnswer(idx: number) {
   if (answered.value) return
   selectedIdx.value = idx
   store.answerCurrent(idx)
@@ -285,6 +297,7 @@ function goNext() {
   if (!hasMore) {
     phase.value = 'result'
     timer.stop()
+    sessionStorage.removeItem('__quiz_active__')
   }
 }
 
@@ -297,6 +310,7 @@ function toggleBookmark() {
 function goSetup() {
   store.endSession()
   timer.reset(0)
+  sessionStorage.removeItem('__quiz_active__')
   phase.value = 'setup'
 }
 
@@ -334,7 +348,7 @@ onMounted(() => {
     config.value = { category: 'wrong', count: 0, difficulty: 'all', timer: false }
     startQuiz()
   } else if (cat) {
-    config.value = { ...config.value, category: cat }
+    config.value = { ...config.value, category: cat as CategoryId }
   }
 })
 </script>

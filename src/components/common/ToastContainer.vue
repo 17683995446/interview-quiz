@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed top-20 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none">
+  <div class="fixed top-20 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none" role="status" aria-live="polite">
     <transition-group name="toast">
       <div
         v-for="t in toasts"
@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useToast } from '@/composables/use-toast-notification'
 const { toasts } = useToast()
 </script>

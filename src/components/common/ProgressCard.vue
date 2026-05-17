@@ -6,14 +6,14 @@
         <span class="font-semibold text-sm">{{ label }}</span>
         <span class="text-xs text-slate-500">{{ detail }}</span>
       </div>
-      <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+      <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden" role="progressbar" :aria-valuenow="pct" aria-valuemin="0" aria-valuemax="100">
         <div class="h-full rounded-full transition-all duration-500" :class="colorClass" :style="{ width: pct + '%' }"></div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
   label: String,
   detail: String,

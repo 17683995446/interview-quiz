@@ -21,3 +21,16 @@ export const router = createRouter({
     return { top: 0 }
   },
 })
+
+// Route guard: confirm before leaving quiz session
+router.beforeEach((to, from) => {
+  if (from.name === 'quiz' && to.name !== 'quiz') {
+    const session = sessionStorage.getItem('__quiz_active__')
+    if (session === 'true') {
+      const confirmed = window.confirm('刷题进行中，确定要离开吗？未保存的进度将会丢失。')
+      if (!confirmed) return false
+      sessionStorage.removeItem('__quiz_active__')
+    }
+  }
+  return true
+})

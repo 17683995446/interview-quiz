@@ -80,7 +80,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, defineAsyncComponent } from 'vue'
 import { useQuizStore } from '@/stores/quiz-session'
 import { CATEGORIES } from '@/config/categories'
@@ -95,7 +95,7 @@ const LearningTrendChart = defineAsyncComponent(() => import('@/components/stats
 
 const store = useQuizStore()
 const toast = useToast()
-const fileInput = ref(null)
+const fileInput = ref<HTMLInputElement | null>(null)
 
 const stats = computed(() => store.globalStats)
 const catStats = computed(() => store.categoryStats)
@@ -159,20 +159,20 @@ function handleExport() {
 
 function triggerImport() { fileInput.value?.click() }
 
-function handleImport(e) {
-  const file = e.target.files?.[0]
+function handleImport(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
   if (!file) return
   const reader = new FileReader()
   reader.onload = () => {
     try {
-      store.importData(reader.result)
+      store.importData(reader.result as string)
       toast.success('数据导入成功')
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err instanceof Error ? err.message : '导入失败')
     }
   }
   reader.readAsText(file)
-  e.target.value = ''
+  ;(e.target as HTMLInputElement).value = ''
 }
 
 function handleReset() {

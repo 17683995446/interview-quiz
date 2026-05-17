@@ -89,12 +89,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuizStore } from '@/stores/quiz-session'
 import { CATEGORIES } from '@/config/categories'
 import { QuestionEngine } from '@/data/question-bank'
+import type { Question, CategoryId } from '@/types'
 import StatCard from '@/components/common/StatCard.vue'
 import QuestionListItem from '@/components/question/QuestionListItem.vue'
 import QuestionDetailModal from '@/components/question/QuestionDetailModal.vue'
@@ -120,12 +121,12 @@ function goWrongQuiz() {
   }
   router.push({ path: '/quiz', query: { mode: 'wrong' } })
 }
-function goCategoryQuiz(catId) {
+function goCategoryQuiz(catId: CategoryId) {
   router.push({ path: '/quiz', query: { cat: catId } })
 }
 
 // Detail modal
-const detailQuestion = ref(null)
-function showDetail(q) { detailQuestion.value = q }
+const detailQuestion = ref<Question | null>(null)
+function showDetail(q: Question) { detailQuestion.value = q }
 function closeDetail() { detailQuestion.value = null }
 </script>
