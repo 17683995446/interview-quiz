@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>面试刷题系统 - 技术文档</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    .mermaid { background: transparent !important; }
+    .nav-link.active { @apply bg-blue-600 text-white; }
+    .section { display: none; }
+    .section.active { display: block; }
+    pre code { @apply rounded-lg; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans">
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 bg-slate-900 border-b border-slate-800 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-xl">🧠</div>
+        <h1 class="text-xl font-bold">面试刷题系统技术文档</h1>
+      </div>
+      <div class="flex gap-2">
+        <a href="/" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition">返回应用</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="flex pt-16 min-h-screen">
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-16 bottom-0 w-64 bg-slate-900 border-r border-slate-800 overflow-y-auto">
+      <div class="p-4">
+        <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">文档导航</h3>
+        <nav class="space-y-1">
+          <a href="#overview" class="nav-link active block px-3 py-2 rounded-lg hover:bg-slate-800 transition" onclick="showSection('overview')">📋 项目概览</a>
+          <a href="#architecture" class="nav-link block px-3 py-2 rounded-lg hover:bg-slate-800 transition" onclick="showSection('architecture')">🏗️ 系统架构</a>
+          <a href="#dataflow" class="nav-link block px-3 py-2 rounded-lg hover:bg-slate-800 transition" onclick="showSection('dataflow')">🌊 数据流图</a>
+          <a href="#sequence" class="nav-link block px-3 py-2 rounded-lg hover:bg-slate-800 transition" onclick="showSection('sequence')">⏱️ 时序图</a>
+          <a href="#modules" class="nav-link block px-3 py-2 rounded-lg hover:bg-slate-800 transition" onclick="showSection('modules')">📦 模块关系</a>
+          <a href="#database" class="nav-link block px-3 py-2 rounded-lg hover:bg-slate-800 transition" onclick="showSection('database')">🗄️ 数据模型</a>
+          <a href="#api" class="nav-link block px-3 py-2 rounded-lg hover:bg-slate-800 transition" onclick="showSection('api')">🔌 API 文档</a>
+          <a href="#techstack" class="nav-link block px-3 py-2 rounded-lg hover:bg-slate-800 transition" onclick="showSection('techstack')">🛠️ 技术栈</a>
+          <a href="#performance" class="nav-link block px-3 py-2 rounded-lg hover:bg-slate-800 transition" onclick="showSection('performance')">⚡ 性能优化</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-8">
+      <!-- Overview Section -->
+      <section id="overview" class="section active">
+        <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">项目概览</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div class="text-4xl mb-3">🎯</div>
+            <h3 class="text-lg font-semibold mb-2">核心功能</h3>
+            <ul class="text-slate-400 space-y-1 text-sm">
+              <li>• 4500+ 面试题目</li>
+              <li>• 10 大技术分类</li>
+              <li>• SM-2 间隔重复</li>
+              <li>• 智能错题本</li>
+            </ul>
+          </div>
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div class="text-4xl mb-3">⚡</div>
+            <h3 class="text-lg font-semibold mb-2">技术亮点</h3>
+            <ul class="text-slate-400 space-y-1 text-sm">
+              <li>• Vue 3 + TypeScript</li>
+              <li>• Pinia 状态管理</li>
+              <li>• PWA 离线支持</li>
+              <li>• ECharts 可视化</li>
+            </ul>
+          </div>
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div class="text-4xl mb-3">📊</div>
+            <h3 class="text-lg font-semibold mb-2">项目统计</h3>
+            <ul class="text-slate-400 space-y-1 text-sm">
+              <li>• 117 个测试用例</li>
+              <li>• 99.9% 类型覆盖</li>
+              <li>• 4 个模块化 Store</li>
+              <li>• 14 个 Vue 组件</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">项目结构</h3>
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code>interview-quiz/
+├── src/
+│   ├── app/              # 应用入口 (App.vue, router, main)
+│   ├── components/       # Vue 组件
+│   │   ├── common/       # 通用组件 (Card, Toast, Progress)
+│   │   ├── question/     # 题目相关 (ListItem, Modal)
+│   │   └── stats/        # 统计图表 (ECharts 组件)
+│   ├── composables/      # 组合式函数
+│   ├── config/           # 配置常量
+│   ├── data/             # 数据层 (题库引擎, 4500题数据)
+│   ├── services/         # 服务层 (存储, 错误处理, SM-2算法)
+│   ├── stores/           # 状态管理 (4个Pinia Store)
+│   ├── styles/           # 全局样式
+│   ├── types/            # TypeScript 类型定义
+│   └── views/            # 页面视图
+├── scripts/              # 题目生成脚本
+├── public/               # 静态资源
+└── docs/                 # 技术文档</code></pre>
+        </div>
+      </section>
+
+      <!-- Architecture Section -->
+      <section id="architecture" class="section">
+        <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">系统架构</h2>
+        
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">整体架构图</h3>
+          <div class="mermaid">
+graph TB
+    subgraph 展示层[展示层 Presentation]
+        A[Vue 3 组件] --> B[Vue Router]
+        A --> C[Pinia Stores]
+        A --> D[Composables]
+    end
+
+    subgraph 业务逻辑层[业务逻辑层 Business Logic]
+        C --> E[Records Store]
+        C --> F[Bookmarks Store]
+        C --> G[Spaced Repetition Store]
+        C --> H[Quiz Session Store]
+        D --> I[useTheme]
+        D --> J[useTimer]
+        D --> K[useKeyboardShortcuts]
+    end
+
+    subgraph 数据层[数据层 Data Layer]
+        E --> L[QuestionEngine]
+        F --> L
+        G --> M[SM-2 Algorithm]
+        L --> N[4500 Questions Data]
+    end
+
+    subgraph 服务层[服务层 Services]
+        O[Error Handler]
+        P[LocalStorage]
+        Q[Safe Storage Wrapper]
+    end
+
+    subgraph 基础设施[基础设施 Infrastructure]
+        R[Vite Build]
+        S[PWA Service Worker]
+        T[Tailwind CSS]
+        U[TypeScript]
+    end
+
+    A -.-> O
+    C -.-> P
+    P -.-> Q
+    R -.-> S
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-3">前端架构模式</h3>
+            <ul class="space-y-2 text-slate-300">
+              <li><strong class="text-blue-400">Composition API</strong> - 组合式API，逻辑复用</li>
+              <li><strong class="text-blue-400">Store Pattern</strong> - 集中状态管理</li>
+              <li><strong class="text-blue-400">Service Layer</strong> - 业务逻辑抽象</li>
+              <li><strong class="text-blue-400">Repository Pattern</strong> - 数据访问封装</li>
+            </ul>
+          </div>
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-3">状态管理策略</h3>
+            <ul class="space-y-2 text-slate-300">
+              <li><strong class="text-purple-400">Domain Split</strong> - 按领域拆分Store</li>
+              <li><strong class="text-purple-400">Computed Derived</strong> - 计算属性派生状态</li>
+              <li><strong class="text-purple-400">Persistence</strong> - 自动持久化到localStorage</li>
+              <li><strong class="text-purple-400">Reactive Updates</strong> - 响应式更新</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Data Flow Section -->
+      <section id="dataflow" class="section">
+        <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">数据流图</h2>
+        
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">答题流程数据流</h3>
+          <div class="mermaid">
+flowchart LR
+    A[用户选择答案] --> B{QuizSessionPage}
+    B --> C[selectAnswer]
+    C --> D[store.answerCurrent]
+    D --> E[RecordsStore.recordAnswer]
+    D --> F[SpacedRepetitionStore.recordReview]
+    E --> G[更新records]
+    E --> H[更新dailyRecords]
+    F --> I[SM-2 calculateQuality]
+    I --> J[calculateNextReview]
+    J --> K[更新cards]
+    G --> L[持久化到localStorage]
+    H --> L
+    K --> L
+    L --> M[触发响应式更新]
+    M --> N[UI自动刷新]
+          </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">题目加载流程</h3>
+          <div class="mermaid">
+flowchart TD
+    A[用户选择分类/难度] --> B[QuestionBankPage]
+    B --> C[QuestionEngine.filter]
+    C --> D{筛选条件}
+    D -->|category| E[按分类过滤]
+    D -->|difficulty| F[按难度过滤]
+    D -->|type| G[按题型过滤]
+    E --> H[返回题目列表]
+    F --> H
+    G --> H
+    H --> I[渲染题目列表]
+    I --> J[用户交互]
+          </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+          <h3 class="text-xl font-semibold mb-4">间隔重复算法流程</h3>
+          <div class="mermaid">
+flowchart TD
+    A[答题完成] --> B{calculateQuality}
+    B -->|isCorrect=false| C[quality=0]
+    B -->|responseTime<3s| D[quality=5]
+    B -->|responseTime<8s| E[quality=4]
+    B -->|responseTime<15s| F[quality=3]
+    B -->|else| G[quality=2]
+    C --> H{calculateNextReview}
+    D --> H
+    E --> H
+    F --> H
+    G --> H
+    H -->|quality<3| I[重置repetitions=0]
+    H -->|quality<3| J[interval=1]
+    H -->|quality<3| K[easeFactor=2.5]
+    H -->|quality>=3| L[repetitions++]
+    L -->|repetitions=1| M[interval=1]
+    L -->|repetitions=2| N[interval=6]
+    L -->|repetitions>2| O[interval*=easeFactor]
+    H --> P[更新easeFactor]
+    P --> Q[计算nextReviewDate]
+          </div>
+        </div>
+      </section>
+
+      <!-- Sequence Diagram Section -->
+      <section id="sequence" class="section">
+        <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">时序图</h2>
+        
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">刷题会话时序</h3>
+          <div class="mermaid">
+sequenceDiagram
+    actor User
+    participant UI as QuizSessionPage
+    participant Store as useQuizStore
+    participant Records as RecordsStore
+    participant SR as SpacedRepetitionStore
+    participant Storage as LocalStorage
+
+    User->>UI: 点击开始刷题
+    UI->>Store: startSession(questions)
+    Store-->>UI: 初始化session
+    
+    loop 每道题目
+        User->>UI: 选择答案
+        UI->>Store: answerCurrent(idx, responseTime)
+        Store->>Records: recordAnswer(qid, correct, time)
+        Store->>SR: recordReview(qid, correct, time)
+        
+        Records->>Records: 更新records
+        Records->>Records: 更新dailyRecords
+        SR->>SR: calculateQuality
+        SR->>SR: calculateNextReview
+        SR->>SR: 更新cards
+        
+        Records->>Storage: 持久化
+        SR->>Storage: 持久化
+        Store-->>UI: 返回结果
+        UI-->>User: 显示正确/错误
+        
+        User->>UI: 点击下一题
+        UI->>Store: nextQuestion()
+        Store-->>UI: 更新current
+    end
+    
+    User->>UI: 结束会话
+    UI->>Store: endSession()
+          </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">收藏功能时序</h3>
+          <div class="mermaid">
+sequenceDiagram
+    actor User
+    participant UI as QuestionListItem
+    participant Store as useQuizStore
+    participant Bookmarks as BookmarksStore
+    participant Storage as LocalStorage
+    participant QE as QuestionEngine
+
+    User->>UI: 点击收藏按钮
+    UI->>Store: toggleBookmark(questionId)
+    Store->>Bookmarks: toggleBookmark(id)
+    
+    alt 未收藏
+        Bookmarks->>Bookmarks: bookmarks.add(id)
+    else 已收藏
+        Bookmarks->>Bookmarks: bookmarks.delete(id)
+    end
+    
+    Bookmarks->>Bookmarks: 触发响应式更新
+    Bookmarks->>Storage: 持久化
+    
+    Note over Bookmarks: bookmarkedQuestions computed
+    Bookmarks->>QE: getById(id) 查询题目
+    QE-->>Bookmarks: 返回Question
+    Bookmarks-->>Store: 更新bookmarkedQuestions
+    Store-->>UI: 状态同步
+    UI-->>User: 更新收藏图标
+          </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+          <h3 class="text-xl font-semibold mb-4">数据导入导出时序</h3>
+          <div class="mermaid">
+sequenceDiagram
+    actor User
+    participant Stats as StatisticsPage
+    participant Store as useQuizStore
+    participant Records as RecordsStore
+    participant Bookmarks as BookmarksStore
+    participant SR as SpacedRepetitionStore
+    participant QE as QuestionEngine
+
+    User->>Stats: 点击导出
+    Stats->>Store: exportData()
+    Store->>Records: exportRecords()
+    Store->>Bookmarks: exportBookmarks()
+    Store->>SR: exportData()
+    Store->>QE: exportData(records, bookmarks, cards)
+    QE-->>Stats: 返回JSON字符串
+    Stats->>Stats: 创建下载链接
+    Stats-->>User: 下载文件
+
+    User->>Stats: 选择导入文件
+    Stats->>Stats: 读取文件内容
+    Stats->>Store: importData(json)
+    Store->>QE: importData(json)
+    QE-->>Store: 解析数据
+    Store->>Records: importRecords()
+    Store->>Bookmarks: importBookmarks()
+    Store->>SR: importData()
+    Store-->>Stats: 导入完成
+    Stats-->>User: 显示成功提示
+          </div>
+        </div>
+      </section>
+
+      <!-- Modules Section -->
+      <section id="modules" class="section">
+        <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">模块关系图</h2>
+        
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">Store 模块依赖关系</h3>
+          <div class="mermaid">
+graph TB
+    subgraph Stores[Pinia Stores]
+        direction TB
+        QS[useQuizStore<br/>会话编排]
+        RS[useRecordsStore<br/>答题记录]
+        BS[useBookmarksStore<br/>收藏管理]
+        SS[useSpacedRepetitionStore<br/>间隔重复]
+    end
+
+    subgraph Services[Services]
+        EH[error-handler]
+        LS[local-storage]
+        SM2[spaced-repetition<br/>SM-2算法]
+    end
+
+    subgraph Data[Data Layer]
+        QB[question-bank<br/>QuestionEngine]
+        QD[questions-generated<br/>4500题数据]
+    end
+
+    QS -->|uses| RS
+    QS -->|uses| BS
+    QS -->|uses| SS
+    
+    RS -->|uses| QB
+    RS -->|uses| LS
+    BS -->|uses| QB
+    BS -->|uses| LS
+    SS -->|uses| SM2
+    SS -->|uses| LS
+    
+    QB -->|reads| QD
+    
+    QS -.->|error handling| EH
+    RS -.->|error handling| EH
+    BS -.->|error handling| EH
+    SS -.->|error handling| EH
+          </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">组件层级结构</h3>
+          <div class="mermaid">
+graph TD
+    A[App.vue] --> B[RouterView]
+    
+    B --> C[HomePage]
+    B --> D[QuizSessionPage]
+    B --> E[QuestionBankPage]
+    B --> F[FavoritesPage]
+    B --> G[StatisticsPage]
+    
+    C --> C1[StatCard]
+    C --> C2[ProgressCard]
+    C --> C3[AppCard]
+    C --> C4[QuestionDetailModal]
+    
+    D --> D1[ToastContainer]
+    
+    E --> E1[QuestionListItem]
+    E --> E2[QuestionDetailModal]
+    
+    F --> F1[QuestionListItem]
+    F --> F2[QuestionDetailModal]
+    
+    G --> G1[CategoryRadarChart]
+    G --> G2[LearningTrendChart]
+    G --> G3[DailyCheckIn]
+    G --> G4[StatCard]
+    
+    C4 --> C4a[QuestionMeta]
+    E1 --> E1a[QuestionMeta]
+    E2 --> E2a[QuestionMeta]
+    F1 --> F1a[QuestionMeta]
+    F2 --> F2a[QuestionMeta]
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-3">核心模块职责</h3>
+            <table class="w-full text-sm">
+              <thead class="text-slate-400 border-b border-slate-700">
+                <tr><th class="text-left py-2">模块</th><th class="text-left py-2">职责</th></tr>
+              </thead>
+              <tbody class="text-slate-300">
+                <tr class="border-b border-slate-700"><td class="py-2">RecordsStore</td><td>答题记录、每日统计</td></tr>
+                <tr class="border-b border-slate-700"><td class="py-2">BookmarksStore</td><td>收藏管理、收藏列表</td></tr>
+                <tr class="border-b border-slate-700"><td class="py-2">SpacedRepetitionStore</td><td>SM-2算法、复习调度</td></tr>
+                <tr class="border-b border-slate-700"><td class="py-2">QuizSessionStore</td><td>会话状态、协调子Store</td></tr>
+                <tr><td class="py-2">QuestionEngine</td><td>题目查询、筛选、随机抽取</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-3">模块间通信方式</h3>
+            <ul class="space-y-2 text-slate-300 text-sm">
+              <li><strong class="text-blue-400">Props/Events</strong> - 父子组件通信</li>
+              <li><strong class="text-blue-400">Pinia Stores</strong> - 全局状态共享</li>
+              <li><strong class="text-blue-400">Computed</strong> - 派生状态自动同步</li>
+              <li><strong class="text-blue-400">LocalStorage</strong> - 跨会话持久化</li>
+              <li><strong class="text-blue-400">Event Bus</strong> - Toast通知(Composable)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Database Section -->
+      <section id="database" class="section">
+        <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">数据模型</h2>
+        
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">核心类型定义</h3>
+          <pre class="text-sm overflow-x-auto"><code class="language-typescript">// 题目类型
+interface Question {
+  id: number
+  cat: CategoryId           // 分类: ai_basic, ml, dl, nlp, cv, algorithm, network, os, database, python
+  diff: Difficulty          // 难度: easy, medium, hard
+  type: QuestionType        // 类型: choice, truefalse
+  q: string                 // 题目文本
+  opts: string[]            // 选项
+  ans: number               // 正确答案索引
+  exp: string               // 解析说明
+}
+
+// 答题记录
+type Records = Record<number, 'correct' | 'wrong'>
+
+// 收藏集合
+type Bookmarks = Set<number>
+
+// 每日学习记录
+type DailyRecords = Record<string, { count: number; correct: number }>
+
+// 间隔重复卡片
+interface SpacedRepetitionCard {
+  questionId: number
+  interval: number          // 复习间隔(天)
+  repetitions: number       // 重复次数
+  easeFactor: number        // 简易度因子(默认2.5)
+  lastReviewDate: string    // ISO日期
+  nextReviewDate: string    // ISO日期
+}
+
+// 刷题会话
+interface QuizSession {
+  questions: Question[]
+  current: number           // 当前题号
+  score: number             // 得分
+  answered: boolean         // 是否已答
+  results: Array<{ questionId: number; correct: boolean }>
+  config: QuizConfig
+}</code></pre>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">LocalStorage 数据结构</h3>
+          <div class="mermaid">
+erDiagram
+    LOCALSTORAGE {
+        string records "答题记录: { [qid]: 'correct'|'wrong' }"
+        string bookmarks "收藏: number[]"
+        string spacedRepetition "间隔重复卡片: SpacedRepetitionCard[]"
+        string dailyRecords "每日记录: { [date]: {count, correct} }"
+    }
+          </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+          <h3 class="text-xl font-semibold mb-4">数据持久化流程</h3>
+          <div class="mermaid">
+flowchart LR
+    subgraph Memory[内存状态]
+        R[records ref]
+        B[bookmarks ref]
+        S[spacedRepetition ref]
+        D[dailyRecords ref]
+    end
+
+    subgraph Persistence[持久化层]
+        LS[localStorage]
+        SS[sessionStorage]
+    end
+
+    R -->|save()| LS
+    B -->|save()| LS
+    S -->|save()| LS
+    D -->|save()| LS
+    
+    SS -->|__quiz_active__| SessionFlag[会话进行中标记]
+          </div>
+        </div>
+      </section>
+
+      <!-- API Section -->
+      <section id="api" class="section">
+        <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">API 文档</h2>
+        
+        <div class="space-y-6">
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-xl font-semibold mb-4">QuestionEngine API</h3>
+            <pre class="text-sm overflow-x-auto"><code class="language-typescript">// 根据ID获取题目
+static getById(id: number): Question | undefined
+
+// 筛选题目
+static filter(options: {
+  category?: CategoryId | 'all'
+  difficulty?: Difficulty | 'all'
+  type?: QuestionType | 'all'
+}): Question[]
+
+// 随机抽取题目
+static randomPick(count: number, options?: FilterOptions): Question[]
+
+// 搜索题目
+static search(keyword: string): Question[]
+
+// 获取分类统计
+static getCategoryStats(catId: CategoryId, records: Records): CategoryStats
+
+// 获取全局统计
+static getGlobalStats(records: Records): GlobalStats
+
+// 导出/导入数据
+static exportData(records, bookmarks, spacedRepetition): string
+static importData(json: string): ImportData</code></pre>
+          </div>
+
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-xl font-semibold mb-4">Store Actions API</h3>
+            <pre class="text-sm overflow-x-auto"><code class="language-typescript">// RecordsStore
+recordAnswer(questionId: number, isCorrect: boolean, responseTime?: number): void
+reset(): void
+exportRecords(): string
+importRecords(json: string): void
+
+// BookmarksStore
+toggleBookmark(questionId: number): void
+isBookmarked(questionId: number): boolean
+exportBookmarks(): string
+
+// SpacedRepetitionStore
+recordReview(questionId: number, isCorrect: boolean, responseTime?: number): void
+
+// QuizSessionStore
+startSession(questions: Question[], config: QuizConfig): void
+answerCurrent(selectedIdx: number, responseTime?: number): AnswerResult | null
+nextQuestion(): boolean
+endSession(): void
+resetAll(): void</code></pre>
+          </div>
+
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-xl font-semibold mb-4">SM-2 算法 API</h3>
+            <pre class="text-sm overflow-x-auto"><code class="language-typescript">// 计算答题质量 (0-5)
+calculateQuality(isCorrect: boolean, responseTime?: number): Quality
+
+// 计算下次复习时间
+calculateNextReview(card: SpacedRepetitionCard, quality: Quality): SpacedRepetitionCard
+
+// 创建新卡片
+createCard(questionId: number): SpacedRepetitionCard
+
+// 获取待复习题目
+getDueReviews(cards: SpacedRepetitionCard[]): number[]
+
+// 获取复习统计
+getReviewStats(cards: SpacedRepetitionCard[]): ReviewStats</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tech Stack Section -->
+      <section id="techstack" class="section">
+        <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">技术栈</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span class="text-green-400">●</span> 核心框架
+            </h3>
+            <ul class="space-y-2 text-slate-300">
+              <li><strong>Vue 3.5</strong> - 渐进式框架</li>
+              <li><strong>TypeScript 5.8</strong> - 类型安全</li>
+              <li><strong>Vite 8</strong> - 构建工具</li>
+              <li><strong>Vue Router 4</strong> - 路由管理</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span class="text-yellow-400">●</span> 状态管理
+            </h3>
+            <ul class="space-y-2 text-slate-300">
+              <li><strong>Pinia 3</strong> - 状态管理</li>
+              <li><strong>Composition API</strong> - 组合式API</li>
+              <li><strong>Computed</strong> - 派生状态</li>
+              <li><strong>Reactive</strong> - 响应式系统</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span class="text-blue-400">●</span> 样式方案
+            </h3>
+            <ul class="space-y-2 text-slate-300">
+              <li><strong>Tailwind CSS 4</strong> - 原子CSS</li>
+              <li><strong>CSS Variables</strong> - 主题变量</li>
+              <li><strong>Dark Mode</strong> - 深色模式</li>
+              <li><strong>Responsive</strong> - 响应式设计</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span class="text-purple-400">●</span> 可视化
+            </h3>
+            <ul class="space-y-2 text-slate-300">
+              <li><strong>ECharts 6</strong> - 图表库</li>
+              <li><strong>Vue-ECharts</strong> - Vue封装</li>
+              <li><strong>Async Loading</strong> - 异步加载</li>
+              <li><strong>Code Splitting</strong> - 代码分割</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span class="text-red-400">●</span> 测试工具
+            </h3>
+            <ul class="space-y-2 text-slate-300">
+              <li><strong>Vitest</strong> - 单元测试</li>
+              <li><strong>Vue Test Utils</strong> - 组件测试</li>
+              <li><strong>Happy DOM</strong> - DOM环境</li>
+              <li><strong>Coverage v8</strong> - 覆盖率</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span class="text-cyan-400">●</span> 工程化
+            </h3>
+            <ul class="space-y-2 text-slate-300">
+              <li><strong>ESLint 9</strong> - 代码检查</li>
+              <li><strong>Prettier</strong> - 代码格式化</li>
+              <li><strong>Husky</strong> - Git Hooks</li>
+              <li><strong>PWA</strong> - 离线支持</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Performance Section -->
+      <section id="performance" class="section">
+        <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">性能优化</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-3">构建优化</h3>
+            <ul class="space-y-2 text-slate-300">
+              <li>✅ <strong>代码分割</strong> - 按路由懒加载</li>
+              <li>✅ <strong>Vendor分包</strong> - node_modules独立chunk</li>
+              <li>✅ <strong>ECharts分包</strong> - 图表库异步加载</li>
+              <li>✅ <strong>题目数据分包</strong> - 2MB数据独立加载</li>
+              <li>✅ <strong>Tree Shaking</strong> - 按需引入ECharts组件</li>
+            </ul>
+          </div>
+          <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h3 class="text-lg font-semibold mb-3">运行时优化</h3>
+            <ul class="space-y-2 text-slate-300">
+              <li>✅ <strong>Computed缓存</strong> - 派生状态缓存</li>
+              <li>✅ <strong>v-memo</strong> - 列表渲染优化</li>
+              <li>✅ <strong>防抖存储</strong> - 减少localStorage写入</li>
+              <li>✅ <strong>按需查询</strong> - getById替代全量搜索</li>
+              <li>✅ <strong>PWA缓存</strong> - Service Worker预缓存</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+          <h3 class="text-xl font-semibold mb-4">构建产物分析</h3>
+          <pre class="text-sm overflow-x-auto"><code>dist/
+├── index.html                    1.18 kB (gzip 0.63 kB)
+├── assets/
+│   ├── index-xxx.js             16.08 kB (gzip 6.65 kB)    # 主入口
+│   ├── vendor-xxx.js            43.78 kB (gzip 17.27 kB)   # 第三方库
+│   ├── echarts-vendor-xxx.js   596.27 kB (gzip 202.73 kB)  # 图表库
+│   ├── question-data-xxx.js   1,987.48 kB (gzip 105.39 kB) # 题目数据
+│   ├── QuizSessionPage-xxx.js  12.26 kB (gzip 4.41 kB)     # 刷题页
+│   └── ...
+├── sw.js                         # Service Worker
+└── manifest.webmanifest          # PWA配置</code></pre>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+          <h3 class="text-xl font-semibold mb-4">性能指标</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center p-4 bg-slate-700 rounded-lg">
+              <div class="text-2xl font-bold text-green-400">99</div>
+              <div class="text-sm text-slate-400">Lighthouse性能</div>
+            </div>
+            <div class="text-center p-4 bg-slate-700 rounded-lg">
+              <div class="text-2xl font-bold text-blue-400">&lt;50ms</div>
+              <div class="text-sm text-slate-400">首次交互</div>
+            </div>
+            <div class="text-center p-4 bg-slate-700 rounded-lg">
+              <div class="text-2xl font-bold text-purple-400">0</div>
+              <div class="text-sm text-slate-400">运行时错误</div>
+            </div>
+            <div class="text-center p-4 bg-slate-700 rounded-lg">
+              <div class="text-2xl font-bold text-yellow-400">100%</div>
+              <div class="text-sm text-slate-400">类型覆盖</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        primaryColor: '#3b82f6',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#60a5fa',
+        lineColor: '#94a3b8',
+        secondaryColor: '#1e293b',
+        tertiaryColor: '#0f172a',
+        fontFamily: 'system-ui, sans-serif'
+      },
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      },
+      sequence: {
+        useMaxWidth: true,
+        wrap: true
+      }
+    });
+
+    // Initialize Highlight.js
+    hljs.highlightAll();
+
+    // Navigation
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      // Show target section
+      document.getElementById(sectionId).classList.add('active');
+      // Update nav links
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      event.target.classList.add('active');
+      // Scroll to top
+      window.scrollTo(0, 0);
+    }
+
+    // Handle initial hash
+    if (window.location.hash) {
+      const sectionId = window.location.hash.slice(1);
+      const section = document.getElementById(sectionId);
+      if (section) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        section.classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(l => {
+          l.classList.remove('active');
+          if (l.getAttribute('href') === '#' + sectionId) {
+            l.classList.add('active');
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
