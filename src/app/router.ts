@@ -11,6 +11,7 @@ const routes = [
   { path: '/browse', name: 'browse', component: () => import('@/views/QuestionBankPage.vue') },
   { path: '/collection', name: 'collection', component: () => import('@/views/FavoritesPage.vue') },
   { path: '/stats', name: 'stats', component: () => import('@/views/StatisticsPage.vue') },
+  { path: '/docs', name: 'docs', component: () => import('@/views/DocsPage.vue') },
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 
